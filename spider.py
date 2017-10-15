@@ -35,22 +35,30 @@ class Spider:
     #atualizando o pagina atual e proxima
     #def crawl_page(self):
 
-    #Pega o link para proxima pág
-    #def get_next_page():
-
+    #Encontra os links da página atual e os coloca no arquivo fila
     @staticmethod
-    def find_links(url):
+    def find_links():
         links = []
-        page = requests.get(url)
+        page = requests.get(Spider.current_page)
         soup = BeautifulSoup(page.content, 'html.parser')
         for result in soup.select('div.rslt a'): #pega resultados
             links.append(result['href'])
-        return links
+        for result in links:
+            append_to_file(Spider.queue_file, result)
+    #Deve adicionar a próxima página para página atual e atualizar próxima página
 
 
+
+    #Dado o link da sequência é retornado o nome dela para download
     @staticmethod
     def find_name(url):
          page = requests.get(url)
          soup = BeautifulSoup(page.content, 'html.parser')
          name = soup.select('div#ResultView table a')
          return name[0].get_text()
+
+    # Pega o link para proxima pág
+    #def get_next_page():
+
+Spider('VirHuSeq2','https://www.ncbi.nlm.nih.gov/sra/?term=human+AND+RNA','www.ncbi.nlm.nih.gov/')
+Spider.find_links()

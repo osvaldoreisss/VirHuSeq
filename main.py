@@ -5,15 +5,15 @@ from domain import *
 from general import *
 from SeqProcess import SeqProcess
 
-NOME_PROJETO = 'VirHuSeq'
+PROJECT_NAME = 'VirHuSeq'
 HOMEPAGE = 'https://www.ncbi.nlm.nih.gov/sra/?term=human+AND+RNA'
-NOME_DOMINIO = get_domain_name(HOMEPAGE)
-ARQ_FILA = NOME_PROJETO + '/queue.txt'
-ARQ_PROCESSADOS = NOME_PROJETO + '/processados.txt'
-CRAWLED_FILE = NOME_PROJETO + '/crawled.txt'
+DOMAIN_NAME = get_domain_name(HOMEPAGE)
+QUEUE_FILE = PROJECT_NAME + '/queue.txt'
+PROCESSED_FILE = PROJECT_NAME + '/processed.txt'
+CRAWLED_FILE = PROJECT_NAME + '/crawled.txt'
 NUMBER_OF_THREADS = 3
 queue = Queue()
-Spider(NOME_PROJETO,HOMEPAGE,NOME_DOMINIO)
+Spider(PROJECT_NAME,HOMEPAGE,DOMAIN_NAME)
 
 def criar_processos():
     for _ in range (NUMBER_OF_THREADS):
@@ -29,17 +29,17 @@ def seq_processos():
 
 #Para cada link no arquivo da fila, um processo é adicionado ao queue
 def create_jobs():
-    for link in file_to_set(ARQ_FILA):
+    for link in file_to_set(QUEUE_FILE):
         queue.put(link)
     queue.join()
     crawl()
 
 #Lê o arquivo fila, se estiver vazio vai para proxima pagina, se não houver proxima para
 def crawl():
-    queued_links = file_to_set(ARQ_FILA)
+    queued_links = file_to_set(QUEUE_FILE)
     if len(queued_links) > 0: #saber se ainda há algo pra ser crawled
         print(str(len(queued_links)) + ' links in the queue')
         create_jobs()
     else: #Quando não houver nada na fila, ele irá para a próxima página
-        if Spider.proximapagina(): #Se não houver próxima página ele para
+        if Spider.next_page(): #Se não houver próxima página ele para
             crawl()

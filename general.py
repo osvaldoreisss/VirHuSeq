@@ -14,8 +14,8 @@ def create_process_dir(project_name, process):
 def create_data_files(project_name, base_url):
     queue = project_name + '/queue.txt' #paginas na fila para ser crawled
     processed = project_name + '/processed.txt'
-    current_page = project_name + 'currentpage.txt'
-    next_page = project_name + 'nextpage.txt'
+    current_page = project_name + '/currentpage.txt'
+    next_page = project_name + '/nextpage.txt'
     if not os.path.isfile(queue):
         write_file(queue, '')
     if not os.path.isfile(processed):
